@@ -1,0 +1,169 @@
+[
+  {
+    "id": "home",
+    "locales": {
+      "fr-fr": {
+        "slug": "",
+        "seo": {
+          "title": "Bezot Corp",
+          "description": "Bezot Corp concoit des outils logiciels orientes IA locale, automatisation et productivite developpeur."
+        },
+        "blocks": [
+          {
+            "type": "hero",
+            "props": {
+              "title": "Bezot Corp",
+              "subtitle": "IA locale, automatisation et outils developpeur."
+            }
+          },
+          {
+            "type": "paragraph",
+            "props": {
+              "text": "Bezot Corp construit des outils logiciels propres, utiles et orientes productivite."
+            }
+          }
+        ]
+      },
+      "en-us": {
+        "slug": "",
+        "seo": {
+          "title": "Bezot Corp",
+          "description": "Bezot Corp builds software focused on local AI, automation, and developer productivity."
+        },
+        "blocks": [
+          {
+            "type": "hero",
+            "props": {
+              "title": "Bezot Corp",
+              "subtitle": "Local AI, automation, and developer tools."
+            }
+          },
+          {
+            "type": "paragraph",
+            "props": {
+              "text": "Bezot Corp builds clean, useful software tools focused on productivity."
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "contact",
+    "locales": {
+      "fr-fr": {
+        "slug": "contact",
+        "seo": {
+          "title": "Contact - Bezot Corp",
+          "description": "Contactez Bezot Corp pour une question, une idee ou un projet logiciel."
+        },
+        "blocks": [
+          {
+            "type": "hero",
+            "props": {
+              "title": "Contact",
+              "subtitle": "Une question, une idee ou un projet ?"
+            }
+          },
+          {
+            "type": "mail_link",
+            "props": {
+              "email": "contact@bezotcorp.com",
+              "label": "Envoyer un email"
+            }
+          }
+        ]
+      },
+      "en-us": {
+        "slug": "contact",
+        "seo": {
+          "title": "Contact - Bezot Corp",
+          "description": "Contact Bezot Corp for a question, idea, or software project."
+        },
+        "blocks": [
+          {
+            "type": "hero",
+            "props": {
+              "title": "Contact",
+              "subtitle": "Have a question, idea, or project?"
+            }
+          },
+          {
+            "type": "mail_link",
+            "props": {
+              "email": "contact@bezotcorp.com",
+              "label": "Send an email"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "projects",
+    "locales": {
+      "fr-fr": {
+        "slug": "projets",
+        "seo": {
+          "title": "Projets - Bezot Corp",
+          "description": "Decouvrez les projets publics de Bezot Corp autour de l'IA locale et des outils developpeur."
+        },
+        "blocks": [
+          {
+            "type": "hero",
+            "props": {
+              "title": "Projets",
+              "subtitle": "Les projets publics de Bezot Corp."
+            }
+          },
+          {
+            "type": "card_grid",
+            "props": {
+              "items": [
+                {
+                  "title": "Agent IA local",
+                  "text": "Un assistant de developpement local concu pour comprendre, analyser et modifier du code."
+                },
+                {
+                  "title": "Outils developpeur",
+                  "text": "Des outils pour structurer, verifier et automatiser les projets logiciels."
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "en-us": {
+        "slug": "projects",
+        "seo": {
+          "title": "Projects - Bezot Corp",
+          "description": "Explore Bezot Corp public projects across local AI and developer tooling."
+        },
+        "blocks": [
+          {
+            "type": "hero",
+            "props": {
+              "title": "Projects",
+              "subtitle": "Public projects by Bezot Corp."
+            }
+          },
+          {
+            "type": "card_grid",
+            "props": {
+              "items": [
+                {
+                  "title": "Local AI Agent",
+                  "text": "A local development assistant designed to understand, analyze, and modify code."
+                },
+                {
+                  "title": "Developer Tools",
+                  "text": "Tools to structure, verify, and automate software projects."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+]
