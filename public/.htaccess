@@ -1,9 +1,21 @@
 RewriteEngine On
 
-RewriteRule ^$ /fr-fr/ [R=302,L]
+# Racine -> locale principale
+RewriteRule ^$ /fr-fr/ [R=301,L]
 
+# Fichiers réels
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-RewriteRule ^ /404.html [R=404,L]
+# Routes React connues
+RewriteRule ^fr-fr/?$ /index.html [L]
+RewriteRule ^en-us/?$ /index.html [L]
+RewriteRule ^fr-fr/contact/?$ /index.html [L]
+RewriteRule ^en-us/contact/?$ /index.html [L]
+RewriteRule ^fr-fr/projets/?$ /index.html [L]
+RewriteRule ^en-us/projects/?$ /index.html [L]
+
+# Vraie 404
+ErrorDocument 404 /404.html
+RewriteRule ^ - [R=404,L]
