@@ -1,4 +1,4 @@
-import { pages, site } from './generated/site';
+import { pages, posts, site } from './generated/site';
 import { defaultLocale, isLocale, locales, type Locale } from './i18n/locales';
 
 export const siteUrl = site.baseUrl;
@@ -6,7 +6,9 @@ export const siteName = site.name;
 export const defaultOgImage = site.defaultOgImage;
 
 export type SitePage = (typeof pages)[number];
-export type SitePageContent = SitePage['locales'][Locale];
+export type SitePost = (typeof posts)[number];
+export type SiteEntry = SitePage | SitePost;
+export type SiteEntryContent = SiteEntry['locales'][Locale];
 
 export type SeoAlternate = {
   locale: Locale;
@@ -30,8 +32,8 @@ export type RouteMatch =
       kind: 'page';
       locale: Locale;
       path: string;
-      page: SitePage;
-      content: SitePageContent;
+      entry: SiteEntry;
+      content: SiteEntryContent;
       seo: SeoMetadata;
     }
   | {
@@ -53,6 +55,10 @@ function getLang(locale: Locale) {
   return locale.split('-')[0];
 }
 
+function getEntries(): SiteEntry[] {
+  return [...pages, ...posts];
+}
+
 export function getPathForLocaleAndSlug(locale: Locale, slug: string) {
   return slug ? `/${locale}/${slug}` : `/${locale}`;
 }
@@ -61,8 +67,25 @@ export function getCanonicalPath(path: string) {
   return path === '/' ? `/${defaultLocale}` : normalizePathname(path);
 }
 
+export function findEntryByLocaleAndSlug(locale: Locale, slug = '') {
+  const entry: SiteEntry | undefined = getEntries().find(
+    (item) => item.status === 'published' && item.locales[locale].slug === slug,
+  );
+
+  if (!entry) {
+    return null;
+  }
+
+  return {
+    entry,
+    content: entry.locales[locale],
+  };
+}
+
 export function findPageByLocaleAndSlug(locale: Locale, slug = '') {
-  const page = pages.find((entry) => entry.status === 'published' && entry.locales[locale].slug === slug);
+  const page: SitePage | undefined = pages.find(
+    (entry) => entry.status === 'published' && entry.locales[locale].slug === slug,
+  );
 
   if (!page) {
     return null;
@@ -74,12 +97,12 @@ export function findPageByLocaleAndSlug(locale: Locale, slug = '') {
   };
 }
 
-export function getPageSeo(page: SitePage, locale: Locale): SeoMetadata {
-  const content = page.locales[locale];
+export function getEntrySeo(entry: SiteEntry, locale: Locale): SeoMetadata {
+  const content = entry.locales[locale];
 
   const alternates = locales.map((entryLocale) => ({
     locale: entryLocale,
-    path: getPathForLocaleAndSlug(entryLocale, page.locales[entryLocale].slug),
+    path: getPathForLocaleAndSlug(entryLocale, entry.locales[entryLocale].slug),
   }));
 
   return {
@@ -93,6 +116,10 @@ export function getPageSeo(page: SitePage, locale: Locale): SeoMetadata {
     ogDescription: content.seo.ogDescription,
     ogImage: content.seo.ogImage ?? defaultOgImage,
   };
+}
+
+export function getPageSeo(page: SitePage, locale: Locale): SeoMetadata {
+  return getEntrySeo(page, locale);
 }
 
 export function getNotFoundSeo(locale: Locale): SeoMetadata {
@@ -141,9 +168,9 @@ export function resolveRoute(pathname: string): RouteMatch {
 
   const locale = localeSegment;
   const slug = slugSegments.join('/');
-  const pageMatch = findPageByLocaleAndSlug(locale, slug);
+  const entryMatch = findEntryByLocaleAndSlug(locale, slug);
 
-  if (!pageMatch) {
+  if (!entryMatch) {
     return {
       kind: 'not-found',
       locale,
@@ -152,15 +179,15 @@ export function resolveRoute(pathname: string): RouteMatch {
     };
   }
 
-  const path = getPathForLocaleAndSlug(locale, pageMatch.content.slug);
+  const path = getPathForLocaleAndSlug(locale, entryMatch.content.slug);
 
   return {
     kind: 'page',
     locale,
     path,
-    page: pageMatch.page,
-    content: pageMatch.content,
-    seo: getPageSeo(pageMatch.page, locale),
+    entry: entryMatch.entry,
+    content: entryMatch.content,
+    seo: getEntrySeo(entryMatch.entry, locale),
   };
 }
 
@@ -174,13 +201,27 @@ export function getPagePath(pageId: SitePage['id'], locale: Locale) {
   return getPathForLocaleAndSlug(locale, page.locales[locale].slug);
 }
 
+export function getPostPath(postId: SitePost['id'], locale: Locale) {
+  const post = posts.find((entry) => entry.id === postId && entry.status === 'published');
+
+  if (!post) {
+    return null;
+  }
+
+  return getPathForLocaleAndSlug(locale, post.locales[locale].slug);
+}
+
+export function getPublishedPosts() {
+  return posts.filter((post) => post.status === 'published');
+}
+
 export function getPrerenderRoutes() {
-  return pages
-    .filter((page) => page.status === 'published')
-    .flatMap((page) =>
+  return getEntries()
+    .filter((entry) => entry.status === 'published')
+    .flatMap((entry) =>
       locales.map((locale) => ({
-        path: getPathForLocaleAndSlug(locale, page.locales[locale].slug),
-        seo: getPageSeo(page, locale),
+        path: getPathForLocaleAndSlug(locale, entry.locales[locale].slug),
+        seo: getEntrySeo(entry, locale),
       })),
     );
 }

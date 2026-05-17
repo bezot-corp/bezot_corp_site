@@ -1,9 +1,15 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 
-const inputPath = 'content/pages.json';
+const pagesInputPath = 'content/pages.json';
+const blogInputPath = 'content/blog.json';
 const outputPath = 'src/generated/site.ts';
 
-const source = JSON.parse(readFileSync(inputPath, 'utf-8'));
+const pagesSource = JSON.parse(readFileSync(pagesInputPath, 'utf-8'));
+const blogSource = JSON.parse(readFileSync(blogInputPath, 'utf-8'));
+const source = {
+  ...pagesSource,
+  posts: blogSource.posts ?? [],
+};
 
 mkdirSync('src/generated', { recursive: true });
 
@@ -16,12 +22,16 @@ export const redirects = ${JSON.stringify(source.redirects ?? [], null, 2)} as c
 export const gone = ${JSON.stringify(source.gone ?? [], null, 2)} as const;
 
 export const pages = ${JSON.stringify(source.pages, null, 2)} as const;
+export const posts = ${JSON.stringify(source.posts ?? [], null, 2)} as const;
 
 export type GeneratedSite = typeof site;
 export type GeneratedPage = (typeof pages)[number];
+export type GeneratedPost = (typeof posts)[number];
 export type GeneratedLocale = (typeof site.locales)[number];
+
 export type GeneratedBlock =
-  GeneratedPage["locales"][GeneratedLocale]["blocks"][number];
+  | GeneratedPage["locales"][GeneratedLocale]["blocks"][number]
+  | GeneratedPost["locales"][GeneratedLocale]["blocks"][number];
 `;
 
 writeFileSync(outputPath, output);

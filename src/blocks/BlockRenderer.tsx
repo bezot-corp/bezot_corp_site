@@ -1,6 +1,7 @@
 import { CardGridBlock } from "./CardGridBlock";
 import { HeroBlock } from "./HeroBlock";
 import { MailLinkBlock } from "./MailLinkBlock";
+import { PostListBlock } from "./PostListBlock";
 import { ParagraphBlock } from "./ParagraphBlock";
 
 type Props = {
@@ -23,6 +24,9 @@ export function BlockRenderer({ block }: Props) {
 
     case "card_grid":
       return <CardGridBlock props={block.props} />;
+
+    case "post_list":
+      return <PostListBlock props={block.props} />;
 
     default:
       return null;

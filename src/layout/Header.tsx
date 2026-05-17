@@ -15,6 +15,7 @@ export function Header() {
 
   const homePath = getPagePath('home', locale);
   const projectsPath = getPagePath('projects', locale);
+  const blogPath = getPagePath('blog', locale);
   const contactPath = getPagePath('contact', locale);
 
   return (
@@ -28,6 +29,7 @@ export function Header() {
       <nav>
         {homePath && <Link to={homePath}>{isFrench ? 'Accueil' : 'Home'}</Link>}
         {projectsPath && <Link to={projectsPath}>{isFrench ? 'Projets' : 'Projects'}</Link>}
+        {blogPath && <Link to={blogPath}>Blog</Link>}
         {contactPath && <Link to={contactPath}>Contact</Link>}
       </nav>
 
