@@ -164,6 +164,16 @@ export function resolveRoute(pathname: string): RouteMatch {
   };
 }
 
+export function getPagePath(pageId: SitePage['id'], locale: Locale) {
+  const page = pages.find((entry) => entry.id === pageId && entry.status === 'published');
+
+  if (!page) {
+    return null;
+  }
+
+  return getPathForLocaleAndSlug(locale, page.locales[locale].slug);
+}
+
 export function getPrerenderRoutes() {
   return pages
     .filter((page) => page.status === 'published')

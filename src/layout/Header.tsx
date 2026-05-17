@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { defaultLocale, isLocale, type Locale } from '../i18n/locales';
+import { getPagePath } from '../site';
 
 function getActiveLocale(pathname: string): Locale {
   const firstSegment = pathname.split('/').filter(Boolean)[0];
@@ -7,30 +8,32 @@ function getActiveLocale(pathname: string): Locale {
   return isLocale(firstSegment) ? firstSegment : defaultLocale;
 }
 
-function getProjectsPath(locale: Locale) {
-  return locale === 'fr-fr' ? '/fr-fr/projets' : '/en-us/projects';
-}
-
 export function Header() {
   const location = useLocation();
   const locale = getActiveLocale(location.pathname);
   const isFrench = locale === 'fr-fr';
 
+  const homePath = getPagePath('home', locale);
+  const projectsPath = getPagePath('projects', locale);
+  const contactPath = getPagePath('contact', locale);
+
   return (
     <header className="site-header">
-      <Link to={`/${locale}`} className="brand">
-        Bezot Corp
-      </Link>
+      {homePath && (
+        <Link to={homePath} className="brand">
+          Bezot Corp
+        </Link>
+      )}
 
       <nav>
-        <Link to={`/${locale}`}>{isFrench ? 'Accueil' : 'Home'}</Link>
-        <Link to={getProjectsPath(locale)}>{isFrench ? 'Projets' : 'Projects'}</Link>
-        <Link to={`/${locale}/contact`}>Contact</Link>
+        {homePath && <Link to={homePath}>{isFrench ? 'Accueil' : 'Home'}</Link>}
+        {projectsPath && <Link to={projectsPath}>{isFrench ? 'Projets' : 'Projects'}</Link>}
+        {contactPath && <Link to={contactPath}>Contact</Link>}
       </nav>
 
       <div className="locale-switch">
-        <Link to="/fr-fr">FR</Link>
-        <Link to="/en-us">EN</Link>
+        <Link to={getPagePath('home', 'fr-fr') ?? '/fr-fr'}>FR</Link>
+        <Link to={getPagePath('home', 'en-us') ?? '/en-us'}>EN</Link>
       </div>
     </header>
   );
