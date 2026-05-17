@@ -1,21 +1,15 @@
-import { useParams } from "react-router-dom";
-import { defaultLocale, isLocale } from "../i18n/locales";
-import { NotFoundPage } from "./NotFoundPage";
-import { findPageByLocaleAndSlug, getPageSeo } from "../site";
-import { PageTemplate } from "../templates/PageTemplate";
+import { useLocation } from 'react-router-dom';
+import { resolveRoute } from '../site';
+import { NotFoundPage } from './NotFoundPage';
+import { PageTemplate } from '../templates/PageTemplate';
 
 export function PageRenderer() {
-  const { locale, slug = "" } = useParams();
+  const location = useLocation();
+  const match = resolveRoute(location.pathname);
 
-  if (!isLocale(locale)) {
-    return <NotFoundPage locale={defaultLocale} />;
-  }
-
-  const match = findPageByLocaleAndSlug(locale, slug);
-
-  if (!match) {
-    return <NotFoundPage locale={locale} />;
-  }
-
-  return <PageTemplate page={match.content} seo={getPageSeo(match.page, locale)} />;
+  return match.kind === 'page' ? (
+    <PageTemplate page={match.content} seo={match.seo} />
+  ) : (
+    <NotFoundPage locale={match.locale} />
+  );
 }

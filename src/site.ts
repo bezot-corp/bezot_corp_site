@@ -1,5 +1,9 @@
+import { pages, site } from './generated/site';
 import { defaultLocale, isLocale, locales, type Locale } from './i18n/locales';
-import { pages } from './generated/pages';
+
+export const siteUrl = site.baseUrl;
+export const siteName = site.name;
+export const defaultOgImage = site.defaultOgImage;
 
 export type SitePage = (typeof pages)[number];
 export type SitePageContent = SitePage['locales'][Locale];
@@ -16,6 +20,9 @@ export type SeoMetadata = {
   lang: string;
   canonicalPath?: string;
   alternates: SeoAlternate[];
+  ogTitle: string;
+  ogDescription?: string;
+  ogImage: string;
 };
 
 export type RouteMatch =
@@ -43,15 +50,19 @@ function normalizePathname(pathname: string) {
 }
 
 function getLang(locale: Locale) {
-  return locale.startsWith('fr') ? 'fr' : 'en';
+  return locale.split('-')[0];
 }
 
 export function getPathForLocaleAndSlug(locale: Locale, slug: string) {
   return slug ? `/${locale}/${slug}` : `/${locale}`;
 }
 
+export function getCanonicalPath(path: string) {
+  return path === '/' ? `/${defaultLocale}` : normalizePathname(path);
+}
+
 export function findPageByLocaleAndSlug(locale: Locale, slug = '') {
-  const page = pages.find((entry) => entry.locales[locale].slug === slug);
+  const page = pages.find((entry) => entry.status === 'published' && entry.locales[locale].slug === slug);
 
   if (!page) {
     return null;
@@ -65,6 +76,7 @@ export function findPageByLocaleAndSlug(locale: Locale, slug = '') {
 
 export function getPageSeo(page: SitePage, locale: Locale): SeoMetadata {
   const content = page.locales[locale];
+
   const alternates = locales.map((entryLocale) => ({
     locale: entryLocale,
     path: getPathForLocaleAndSlug(entryLocale, page.locales[entryLocale].slug),
@@ -73,23 +85,33 @@ export function getPageSeo(page: SitePage, locale: Locale): SeoMetadata {
   return {
     title: content.seo.title,
     description: content.seo.description,
-    robots: 'index, follow',
+    robots: content.seo.robots ?? 'index, follow',
     lang: getLang(locale),
     canonicalPath: getPathForLocaleAndSlug(locale, content.slug),
     alternates,
+    ogTitle: content.seo.ogTitle,
+    ogDescription: content.seo.ogDescription,
+    ogImage: content.seo.ogImage ?? defaultOgImage,
   };
 }
 
 export function getNotFoundSeo(locale: Locale): SeoMetadata {
+  const title = locale === 'fr-fr' ? `Page introuvable - ${siteName}` : `Page not found - ${siteName}`;
+
+  const description =
+    locale === 'fr-fr'
+      ? 'Cette URL ne correspond à aucune page publiée.'
+      : 'This URL does not match any published page.';
+
   return {
-    title: locale === 'fr-fr' ? 'Page introuvable - Bezot Corp' : 'Page not found - Bezot Corp',
-    description:
-      locale === 'fr-fr'
-        ? 'Cette URL ne correspond a aucune page publiee.'
-        : 'This URL does not match any published page.',
+    title,
+    description,
     robots: 'noindex, nofollow',
     lang: getLang(locale),
     alternates: [],
+    ogTitle: title,
+    ogDescription: description,
+    ogImage: defaultOgImage,
   };
 }
 
@@ -130,10 +152,12 @@ export function resolveRoute(pathname: string): RouteMatch {
     };
   }
 
+  const path = getPathForLocaleAndSlug(locale, pageMatch.content.slug);
+
   return {
     kind: 'page',
     locale,
-    path: getPathForLocaleAndSlug(locale, slug),
+    path,
     page: pageMatch.page,
     content: pageMatch.content,
     seo: getPageSeo(pageMatch.page, locale),
@@ -141,10 +165,12 @@ export function resolveRoute(pathname: string): RouteMatch {
 }
 
 export function getPrerenderRoutes() {
-  return pages.flatMap((page) =>
-    locales.map((locale) => ({
-      path: getPathForLocaleAndSlug(locale, page.locales[locale].slug),
-      seo: getPageSeo(page, locale),
-    })),
-  );
+  return pages
+    .filter((page) => page.status === 'published')
+    .flatMap((page) =>
+      locales.map((locale) => ({
+        path: getPathForLocaleAndSlug(locale, page.locales[locale].slug),
+        seo: getPageSeo(page, locale),
+      })),
+    );
 }
