@@ -46,33 +46,28 @@ function toHrefLang(locale) {
   return locale === 'fr-fr' ? 'fr-FR' : locale === 'en-us' ? 'en-US' : locale;
 }
 
-function buildAlternateHeadTags(seo) {
-  const tags = seo.alternates.map(
-    (alternate) =>
-      `<link rel="alternate" hreflang="${toHrefLang(alternate.locale)}" href="${escapeHtml(
-        absoluteUrl(alternate.path),
-      )}">`,
-  );
-
-  tags.push(`<link rel="alternate" hreflang="x-default" href="${escapeHtml(absoluteUrl('/'))}">`);
-
-  return tags;
-}
-
 function buildHeadTags(seo) {
   const tags = [
     `<meta name="description" content="${escapeHtml(seo.description ?? '')}">`,
-    `<meta name="robots" content="${escapeHtml(seo.robots ?? 'index, follow')}">`,
+    `<meta name="robots" content="${escapeHtml(seo.robots)}">`,
   ];
 
   if (seo.canonicalPath) {
-    const canonicalUrl = absoluteUrl(seo.canonicalPath);
-
-    tags.push(`<link rel="canonical" href="${escapeHtml(canonicalUrl)}">`);
-    tags.push(`<meta property="og:url" content="${escapeHtml(canonicalUrl)}">`);
+    tags.push(`<link rel="canonical" href="${escapeHtml(absoluteUrl(seo.canonicalPath))}">`);
+    tags.push(`<meta property="og:url" content="${escapeHtml(absoluteUrl(seo.canonicalPath))}">`);
   }
 
-  tags.push(...buildAlternateHeadTags(seo));
+  seo.alternates.forEach((alternate) => {
+    tags.push(
+      `<link rel="alternate" hreflang="${toHrefLang(alternate.locale)}" href="${escapeHtml(
+        absoluteUrl(alternate.path),
+      )}">`,
+    );
+  });
+
+  if (seo.alternates.length > 0) {
+    tags.push(`<link rel="alternate" hreflang="x-default" href="${escapeHtml(absoluteUrl('/'))}">`);
+  }
 
   tags.push(`<meta property="og:title" content="${escapeHtml(seo.ogTitle ?? seo.title)}">`);
 
@@ -133,23 +128,18 @@ function findUpdatedAt(routePath) {
   return undefined;
 }
 
-function buildSitemapAlternateLinks(route) {
-  const localeLinks = route.seo.alternates.map(
-    (alternate) =>
-      `    <xhtml:link rel="alternate" hreflang="${toHrefLang(alternate.locale)}" href="${escapeXml(
-        absoluteUrl(alternate.path),
-      )}" />`,
-  );
-
-  localeLinks.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(absoluteUrl('/'))}" />`);
-
-  return localeLinks.join('\n');
-}
-
 function buildSitemap(routes) {
   const entries = routes
     .map((route) => {
-      const alternateLinks = buildSitemapAlternateLinks(route);
+      const alternateLinks = route.seo.alternates
+        .map(
+          (alternate) =>
+            `    <xhtml:link rel="alternate" hreflang="${toHrefLang(alternate.locale)}" href="${escapeXml(
+              absoluteUrl(alternate.path),
+            )}" />`,
+        )
+        .join('\n');
+
       const lastmod = findUpdatedAt(route.path);
       const lastmodLine = lastmod ? `\n    <lastmod>${escapeXml(lastmod)}</lastmod>` : '';
 
@@ -208,10 +198,7 @@ function buildHtaccess(routes) {
   for (const route of routes) {
     const routePattern = escapeRewritePath(route.path);
 
-    if (!routePattern) {
-      lines.push('RewriteRule ^$ /index.html [L]');
-      continue;
-    }
+    if (!routePattern) continue;
 
     lines.push(`RewriteRule ^${routePattern}/?$ /${routePattern}/index.html [L]`);
   }
