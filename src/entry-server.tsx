@@ -1,7 +1,7 @@
-import { renderToString } from "react-dom/server";
-import { MemoryRouter } from "react-router-dom";
-import { App } from "./App";
-import { getPrerenderRoutes, resolveRoute } from "./site";
+import { renderToString } from 'react-dom/server';
+import { MemoryRouter } from 'react-router-dom';
+import { App } from './App';
+import { getPrerenderRoutes, resolveRoute } from './site';
 
 export { getPrerenderRoutes };
 
@@ -10,12 +10,12 @@ export function render(url: string) {
   const appHtml = renderToString(
     <MemoryRouter initialEntries={[url]}>
       <App />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   return {
     appHtml,
     seo: route.seo,
-    status: route.kind === "page" ? 200 : 404,
+    status: route.kind === 'page' || route.kind === 'root' ? 200 : 404,
   };
 }
