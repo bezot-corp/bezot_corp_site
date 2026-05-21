@@ -27,6 +27,12 @@ export type SeoMetadata = {
 
 export type RouteMatch =
   | {
+      kind: 'root';
+      locale: Locale;
+      path: '/';
+      seo: SeoMetadata;
+    }
+  | {
       kind: 'page';
       locale: Locale;
       path: string;
@@ -58,7 +64,7 @@ export function getPathForLocaleAndSlug(locale: Locale, slug: string) {
 }
 
 export function getCanonicalPath(path: string) {
-  return path === '/' ? `/${defaultLocale}` : normalizePathname(path);
+  return normalizePathname(path);
 }
 
 export function findPageByLocaleAndSlug(locale: Locale, slug = '') {
@@ -95,6 +101,23 @@ export function getPageSeo(page: SitePage, locale: Locale): SeoMetadata {
   };
 }
 
+export function getRootSeo(): SeoMetadata {
+  return {
+    title: siteName,
+    description: 'Choose your language to visit Bezot Corp.',
+    robots: 'index, follow',
+    lang: 'fr',
+    canonicalPath: '/',
+    alternates: locales.map((locale) => ({
+      locale,
+      path: `/${locale}`,
+    })),
+    ogTitle: siteName,
+    ogDescription: 'Choose your language to visit Bezot Corp.',
+    ogImage: defaultOgImage,
+  };
+}
+
 export function getNotFoundSeo(locale: Locale): SeoMetadata {
   const title = locale === 'fr-fr' ? `Page introuvable - ${siteName}` : `Page not found - ${siteName}`;
 
@@ -121,10 +144,10 @@ export function resolveRoute(pathname: string): RouteMatch {
 
   if (segments.length === 0) {
     return {
-      kind: 'not-found',
+      kind: 'root',
       locale: defaultLocale,
-      path: normalizedPath,
-      seo: getNotFoundSeo(defaultLocale),
+      path: '/',
+      seo: getRootSeo(),
     };
   }
 
@@ -175,12 +198,18 @@ export function getPagePath(pageId: SitePage['id'], locale: Locale) {
 }
 
 export function getPrerenderRoutes() {
-  return pages
-    .filter((page) => page.status === 'published')
-    .flatMap((page) =>
-      locales.map((locale) => ({
-        path: getPathForLocaleAndSlug(locale, page.locales[locale].slug),
-        seo: getPageSeo(page, locale),
-      })),
-    );
+  return [
+    {
+      path: '/',
+      seo: getRootSeo(),
+    },
+    ...pages
+      .filter((page) => page.status === 'published')
+      .flatMap((page) =>
+        locales.map((locale) => ({
+          path: getPathForLocaleAndSlug(locale, page.locales[locale].slug),
+          seo: getPageSeo(page, locale),
+        })),
+      ),
+  ];
 }

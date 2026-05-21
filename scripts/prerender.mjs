@@ -66,7 +66,7 @@ function buildHeadTags(seo) {
   });
 
   if (seo.alternates.length > 0) {
-    tags.push(`<link rel="alternate" hreflang="x-default" href="${escapeHtml(absoluteUrl('/fr-fr'))}">`);
+    tags.push(`<link rel="alternate" hreflang="x-default" href="${escapeHtml(absoluteUrl('/'))}">`);
   }
 
   tags.push(`<meta property="og:title" content="${escapeHtml(seo.ogTitle ?? seo.title)}">`);
@@ -167,9 +167,6 @@ function escapeRewritePath(routePath) {
 function buildHtaccess(routes) {
   const lines = [
     'RewriteEngine On',
-    '',
-    '# Canonical root redirect',
-    'RewriteRule ^$ /fr-fr/ [R=301,L]',
     '',
     '# Existing files and directories',
     'RewriteCond %{REQUEST_FILENAME} -f [OR]',
