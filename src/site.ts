@@ -52,7 +52,7 @@ function normalizePathname(pathname: string) {
     return '/';
   }
 
-  return pathname.endsWith('/') && pathname !== '/' ? pathname.slice(0, -1) : pathname;
+  return pathname.endsWith('/') ? pathname : `${pathname}/`;
 }
 
 function getLang(locale: Locale) {
@@ -60,7 +60,7 @@ function getLang(locale: Locale) {
 }
 
 export function getPathForLocaleAndSlug(locale: Locale, slug: string) {
-  return slug ? `/${locale}/${slug}` : `/${locale}`;
+  return normalizePathname(slug ? `/${locale}/${slug}` : `/${locale}`);
 }
 
 export function getCanonicalPath(path: string) {
@@ -68,7 +68,11 @@ export function getCanonicalPath(path: string) {
 }
 
 export function findPageByLocaleAndSlug(locale: Locale, slug = '') {
-  const page = pages.find((entry) => entry.status === 'published' && entry.locales[locale].slug === slug);
+  const normalizedSlug = slug.replace(/^\/+|\/+$/g, '');
+
+  const page = pages.find(
+    (entry) => entry.status === 'published' && entry.locales[locale].slug === normalizedSlug,
+  );
 
   if (!page) {
     return null;
@@ -110,7 +114,7 @@ export function getRootSeo(): SeoMetadata {
     canonicalPath: '/',
     alternates: locales.map((locale) => ({
       locale,
-      path: `/${locale}`,
+      path: getPathForLocaleAndSlug(locale, ''),
     })),
     ogTitle: siteName,
     ogDescription: 'Choose your language to visit Bezot Corp.',
