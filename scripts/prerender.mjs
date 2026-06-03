@@ -55,12 +55,13 @@ function toHrefLang(locale) {
 function buildHeadTags(seo) {
   const tags = [
     `<meta name="description" content="${escapeHtml(seo.description ?? '')}">`,
-    `<meta name="robots" content="${escapeHtml(seo.robots)}">`,
+    `<meta name="robots" content="${escapeHtml(seo.robots ?? 'index, follow')}">`,
   ];
 
   if (seo.canonicalPath) {
-    tags.push(`<link rel="canonical" href="${escapeHtml(absoluteUrl(seo.canonicalPath))}">`);
-    tags.push(`<meta property="og:url" content="${escapeHtml(absoluteUrl(seo.canonicalPath))}">`);
+    const canonicalUrl = absoluteUrl(seo.canonicalPath);
+    tags.push(`<link rel="canonical" href="${escapeHtml(canonicalUrl)}">`);
+    tags.push(`<meta property="og:url" content="${escapeHtml(canonicalUrl)}">`);
   }
 
   seo.alternates.forEach((alternate) => {
@@ -71,9 +72,7 @@ function buildHeadTags(seo) {
     );
   });
 
-  if (seo.alternates.length > 0) {
-    tags.push(`<link rel="alternate" hreflang="x-default" href="${escapeHtml(absoluteUrl('/fr-fr'))}">`);
-  }
+  tags.push(`<link rel="alternate" hreflang="x-default" href="${escapeHtml(absoluteUrl('/'))}">`);
 
   tags.push(`<meta property="og:title" content="${escapeHtml(seo.ogTitle ?? seo.title)}">`);
 
@@ -136,18 +135,23 @@ function findUpdatedAt(routePath) {
   return undefined;
 }
 
+function buildSitemapAlternateLinks(route) {
+  const links = route.seo.alternates.map(
+    (alternate) =>
+      `    <xhtml:link rel="alternate" hreflang="${toHrefLang(alternate.locale)}" href="${escapeXml(
+        absoluteUrl(alternate.path),
+      )}" />`,
+  );
+
+  links.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(absoluteUrl('/'))}" />`);
+
+  return links.join('\n');
+}
+
 function buildSitemap(routes) {
   const entries = routes
     .map((route) => {
-      const alternateLinks = route.seo.alternates
-        .map(
-          (alternate) =>
-            `    <xhtml:link rel="alternate" hreflang="${toHrefLang(alternate.locale)}" href="${escapeXml(
-              absoluteUrl(alternate.path),
-            )}" />`,
-        )
-        .join('\n');
-
+      const alternateLinks = buildSitemapAlternateLinks(route);
       const lastmod = findUpdatedAt(route.path);
       const lastmodLine = lastmod ? `\n    <lastmod>${escapeXml(lastmod)}</lastmod>` : '';
 
@@ -175,9 +179,6 @@ function escapeRewritePath(routePath) {
 function buildHtaccess(routes) {
   const lines = [
     'RewriteEngine On',
-    '',
-    '# Canonical root redirect',
-    'RewriteRule ^$ /fr-fr/ [R=301,L]',
     '',
     '# Existing files and directories',
     'RewriteCond %{REQUEST_FILENAME} -f [OR]',
@@ -209,7 +210,10 @@ function buildHtaccess(routes) {
   for (const route of routes) {
     const routePattern = escapeRewritePath(route.path);
 
-    if (!routePattern) continue;
+    if (!routePattern) {
+      lines.push('RewriteRule ^$ /index.html [L]');
+      continue;
+    }
 
     lines.push(`RewriteRule ^${routePattern}/?$ /${routePattern}/index.html [L]`);
   }
@@ -227,7 +231,10 @@ for (const route of routes) {
 
 writeFileSync(path.join(distDir, '404.html'), renderDocument('/404'));
 writeFileSync(path.join(distDir, 'sitemap.xml'), buildSitemap(routes));
-writeFileSync(path.join(distDir, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`);
+writeFileSync(
+  path.join(distDir, 'robots.txt'),
+  `User-agent: *\nAllow: /\n\nSitemap: ${new URL('/sitemap.xml', siteUrl).toString()}\n`,
+);
 writeFileSync(path.join(distDir, '.htaccess'), buildHtaccess(routes));
 
 rmSync(path.join(distDir, 'server'), { recursive: true, force: true });

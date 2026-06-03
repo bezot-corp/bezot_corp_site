@@ -29,6 +29,12 @@ export type SeoMetadata = {
 
 export type RouteMatch =
   | {
+      kind: 'root';
+      locale: Locale;
+      path: '/';
+      seo: SeoMetadata;
+    }
+  | {
       kind: 'page';
       locale: Locale;
       path: string;
@@ -48,7 +54,7 @@ function normalizePathname(pathname: string) {
     return '/';
   }
 
-  return pathname.endsWith('/') && pathname !== '/' ? pathname.slice(0, -1) : pathname;
+  return pathname.endsWith('/') ? pathname : `${pathname}/`;
 }
 
 function getLang(locale: Locale) {
@@ -60,11 +66,11 @@ function getEntries(): SiteEntry[] {
 }
 
 export function getPathForLocaleAndSlug(locale: Locale, slug: string) {
-  return slug ? `/${locale}/${slug}` : `/${locale}`;
+  return normalizePathname(slug ? `/${locale}/${slug}` : `/${locale}`);
 }
 
 export function getCanonicalPath(path: string) {
-  return path === '/' ? `/${defaultLocale}` : normalizePathname(path);
+  return normalizePathname(path);
 }
 
 export function findEntryByLocaleAndSlug(locale: Locale, slug = '') {
@@ -83,8 +89,10 @@ export function findEntryByLocaleAndSlug(locale: Locale, slug = '') {
 }
 
 export function findPageByLocaleAndSlug(locale: Locale, slug = '') {
-  const page: SitePage | undefined = pages.find(
-    (entry) => entry.status === 'published' && entry.locales[locale].slug === slug,
+  const normalizedSlug = slug.replace(/^\/+|\/+$/g, '');
+
+  const page = pages.find(
+    (entry) => entry.status === 'published' && entry.locales[locale].slug === normalizedSlug,
   );
 
   if (!page) {
@@ -118,8 +126,21 @@ export function getEntrySeo(entry: SiteEntry, locale: Locale): SeoMetadata {
   };
 }
 
-export function getPageSeo(page: SitePage, locale: Locale): SeoMetadata {
-  return getEntrySeo(page, locale);
+export function getRootSeo(): SeoMetadata {
+  return {
+    title: siteName,
+    description: 'Choose your language to visit Bezot Corp.',
+    robots: 'index, follow',
+    lang: 'fr',
+    canonicalPath: '/',
+    alternates: locales.map((locale) => ({
+      locale,
+      path: getPathForLocaleAndSlug(locale, ''),
+    })),
+    ogTitle: siteName,
+    ogDescription: 'Choose your language to visit Bezot Corp.',
+    ogImage: defaultOgImage,
+  };
 }
 
 export function getNotFoundSeo(locale: Locale): SeoMetadata {
@@ -148,10 +169,10 @@ export function resolveRoute(pathname: string): RouteMatch {
 
   if (segments.length === 0) {
     return {
-      kind: 'not-found',
+      kind: 'root',
       locale: defaultLocale,
-      path: normalizedPath,
-      seo: getNotFoundSeo(defaultLocale),
+      path: '/',
+      seo: getRootSeo(),
     };
   }
 
@@ -216,12 +237,18 @@ export function getPublishedPosts() {
 }
 
 export function getPrerenderRoutes() {
-  return getEntries()
-    .filter((entry) => entry.status === 'published')
-    .flatMap((entry) =>
-      locales.map((locale) => ({
-        path: getPathForLocaleAndSlug(locale, entry.locales[locale].slug),
-        seo: getEntrySeo(entry, locale),
-      })),
-    );
+  return [
+    {
+      path: '/',
+      seo: getRootSeo(),
+    },
+    ...pages
+      .filter((page) => page.status === 'published')
+      .flatMap((page) =>
+        locales.map((locale) => ({
+          path: getPathForLocaleAndSlug(locale, page.locales[locale].slug),
+          seo: getPageSeo(page, locale),
+        })),
+      ),
+  ];
 }
