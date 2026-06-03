@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -8,14 +8,41 @@ const distDir = path.join(rootDir, 'dist');
 const serverEntryPath = path.join(distDir, 'server', 'entry-server.js');
 const templatePath = path.join(distDir, 'index.html');
 const pagesContentPath = path.join(rootDir, 'content', 'pages.json');
-const blogContentPath = path.join(rootDir, 'content', 'blog.json');
+const postsContentDir = path.join(rootDir, 'content', 'posts');
 
-const pagesSource = JSON.parse(readFileSync(pagesContentPath, 'utf-8'));
-const blogSource = JSON.parse(readFileSync(blogContentPath, 'utf-8'));
+function readJson(filePath) {
+  return JSON.parse(readFileSync(filePath, 'utf-8'));
+}
+
+function collectJsonFiles(dirPath) {
+  if (!existsSync(dirPath)) {
+    return [];
+  }
+
+  return readdirSync(dirPath)
+    .flatMap((entry) => {
+      const entryPath = path.join(dirPath, entry);
+      const stat = statSync(entryPath);
+
+      if (stat.isDirectory()) {
+        return collectJsonFiles(entryPath);
+      }
+
+      return entryPath.endsWith('.json') ? [entryPath] : [];
+    })
+    .sort();
+}
+
+const pagesSource = readJson(pagesContentPath);
+const posts = collectJsonFiles(postsContentDir)
+  .map((postPath) => readJson(postPath))
+  .sort((a, b) => String(b.publishedAt ?? '').localeCompare(String(a.publishedAt ?? '')));
+
 const source = {
   ...pagesSource,
-  posts: blogSource.posts ?? [],
+  posts,
 };
+
 const template = readFileSync(templatePath, 'utf-8');
 
 const serverEntry = await import(pathToFileURL(serverEntryPath).href);
