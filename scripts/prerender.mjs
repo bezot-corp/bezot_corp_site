@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import {readJson,collectJsonFiles} from './common.mjs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -9,29 +10,6 @@ const serverEntryPath = path.join(distDir, 'server', 'entry-server.js');
 const templatePath = path.join(distDir, 'index.html');
 const pagesContentPath = path.join(rootDir, 'content', 'pages.json');
 const postsContentDir = path.join(rootDir, 'content', 'posts');
-
-function readJson(filePath) {
-  return JSON.parse(readFileSync(filePath, 'utf-8'));
-}
-
-function collectJsonFiles(dirPath) {
-  if (!existsSync(dirPath)) {
-    return [];
-  }
-
-  return readdirSync(dirPath)
-    .flatMap((entry) => {
-      const entryPath = path.join(dirPath, entry);
-      const stat = statSync(entryPath);
-
-      if (stat.isDirectory()) {
-        return collectJsonFiles(entryPath);
-      }
-
-      return entryPath.endsWith('.json') ? [entryPath] : [];
-    })
-    .sort();
-}
 
 const pagesSource = readJson(pagesContentPath);
 const posts = collectJsonFiles(postsContentDir)
