@@ -105,7 +105,7 @@ export function getEntrySeo(entry: SiteEntry, locale: Locale): SeoMetadata {
   return {
     title: content.seo.title,
     description: content.seo.description,
-    robots: content.seo.robots ?? 'index, follow',
+    robots: entry.status === 'published' ? 'index, follow' : 'noindex, nofollow',
     lang: getLang(locale),
     canonicalPath: getPathForLocaleAndSlug(locale, content.slug),
     alternates,
