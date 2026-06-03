@@ -39,10 +39,15 @@ function upsertLink(selector: string, attributes: Record<string, string>) {
   });
 }
 
+function removeManagedLinks() {
+  document.head.querySelectorAll('link[data-managed="true"]').forEach((element) => element.remove());
+}
+
 export function applySeo(seo: SeoMetadata) {
   const description = seo.description ?? '';
   const ogTitle = seo.ogTitle ?? seo.title;
   const ogDescription = seo.ogDescription ?? description;
+  const imageUrl = seo.ogImage ? toAbsoluteUrl(seo.ogImage) : undefined;
 
   document.title = seo.title;
   document.documentElement.lang = seo.lang;
@@ -58,25 +63,24 @@ export function applySeo(seo: SeoMetadata) {
   upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title' }, ogTitle);
   upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description' }, ogDescription);
 
+  if (imageUrl) {
+    upsertMeta('meta[property="og:image"]', { property: 'og:image' }, imageUrl);
+    upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image' }, imageUrl);
+  }
+
+  removeManagedLinks();
+
   if (seo.canonicalPath) {
     const canonicalUrl = toAbsoluteUrl(seo.canonicalPath);
 
     upsertLink('link[rel="canonical"]', {
       rel: 'canonical',
       href: canonicalUrl,
+      'data-managed': 'true',
     });
 
     upsertMeta('meta[property="og:url"]', { property: 'og:url' }, canonicalUrl);
   }
-
-  if (seo.ogImage) {
-    const imageUrl = toAbsoluteUrl(seo.ogImage);
-
-    upsertMeta('meta[property="og:image"]', { property: 'og:image' }, imageUrl);
-    upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image' }, imageUrl);
-  }
-
-  document.head.querySelectorAll('link[rel="alternate"][data-managed="true"]').forEach((element) => element.remove());
 
   seo.alternates.forEach((alternate) => {
     const link = document.createElement('link');
@@ -93,4 +97,12 @@ export function applySeo(seo: SeoMetadata) {
   xDefault.setAttribute('href', toAbsoluteUrl('/'));
   xDefault.setAttribute('data-managed', 'true');
   document.head.appendChild(xDefault);
+
+  const rss = document.createElement('link');
+  rss.setAttribute('rel', 'alternate');
+  rss.setAttribute('type', 'application/rss+xml');
+  rss.setAttribute('title', `${siteConfig.siteName} RSS`);
+  rss.setAttribute('href', toAbsoluteUrl('/rss.xml'));
+  rss.setAttribute('data-managed', 'true');
+  document.head.appendChild(rss);
 }
