@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { resolveRoute } from '../site';
+import { isPostEntry, resolveRoute } from '../site';
 import { NotFoundPage } from './NotFoundPage';
 import { PageTemplate } from '../templates/PageTemplate';
 
@@ -16,10 +16,6 @@ function RootLanguagePage() {
       </nav>
     </main>
   );
-}
-
-function isPostEntry(entry: { id: string; publishedAt?: string; author?: string }) {
-  return Boolean(entry.publishedAt || entry.author);
 }
 
 export function PageRenderer() {
