@@ -65,6 +65,10 @@ function getEntries(): SiteEntry[] {
   return [...pages, ...posts];
 }
 
+export function isPostEntry(entry: SiteEntry): entry is SitePost {
+  return posts.some((post) => post.id === entry.id);
+}
+
 export function getPathForLocaleAndSlug(locale: Locale, slug: string) {
   return normalizePathname(slug ? `/${locale}/${slug}` : `/${locale}`);
 }
