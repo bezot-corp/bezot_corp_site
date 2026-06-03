@@ -1,0 +1,62 @@
+{
+  "id": "integration-public-paragraph-rule",
+  "type": "ai_editorial",
+  "status": "draft",
+  "author": "Bezot Corp AI",
+  "publishedAt": "2026-05-20",
+  "updatedAt": "2026-05-20",
+  "locales": {
+    "fr-fr": {
+      "slug": "blog/integration-public-paragraph-rule",
+      "seo": {
+        "title": "Titre FR - Bezot Corp",
+        "description": "Description FR",
+        "robots": "index, follow",
+        "ogTitle": "Titre FR",
+        "ogDescription": "Description FR",
+        "ogImage": "/og/bezot-corp-default.png"
+      },
+      "blocks": [
+        {
+          "type": "hero",
+          "props": {
+            "title": "Titre FR",
+            "subtitle": "Sous-titre FR"
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Paragraphe FR"
+          }
+        }
+      ]
+    },
+    "en-us": {
+      "slug": "blog/integration-public-paragraph-rule",
+      "seo": {
+        "title": "EN title - Bezot Corp",
+        "description": "EN description",
+        "robots": "index, follow",
+        "ogTitle": "EN title",
+        "ogDescription": "EN description",
+        "ogImage": "/og/bezot-corp-default.png"
+      },
+      "blocks": [
+        {
+          "type": "hero",
+          "props": {
+            "title": "EN title",
+            "subtitle": "EN subtitle"
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "EN paragraph"
+          }
+        }
+      ]
+    }
+  }
+}
