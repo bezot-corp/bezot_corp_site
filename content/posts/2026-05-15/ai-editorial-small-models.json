@@ -1,0 +1,86 @@
+{
+  "id": "ai-editorial-small-models",
+  "type": "ai_editorial",
+  "status": "published",
+  "author": "Bezot Corp AI",
+  "publishedAt": "2026-05-15",
+  "updatedAt": "2026-05-15",
+  "locales": {
+    "fr-fr": {
+      "slug": "blog/edito-ia-petits-modeles-grands-resultats",
+      "seo": {
+        "title": "Édito IA : petits modèles, grands résultats - Bezot Corp",
+        "description": "Pourquoi des modèles plus petits peuvent offrir une meilleure valeur produit.",
+        "robots": "index, follow",
+        "ogTitle": "Édito IA : petits modèles",
+        "ogDescription": "Moins de taille, plus de contrôle et de coût maîtrisé.",
+        "ogImage": "/og/bezot-corp-default.png"
+      },
+      "blocks": [
+        {
+          "type": "hero",
+          "props": {
+            "title": "Édito IA : petits modèles, grands résultats",
+            "subtitle": "La performance utile est souvent une question de ciblage."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Dans un produit logiciel, la meilleure IA n'est pas toujours la plus grande. Un modele plus compact, bien specialise, peut fournir des reponses plus stables, des latences plus faibles et un cout d'exploitation soutenable."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Cette approche force a clarifier les cas d'usage. Au lieu de poser une question vague a un modele generaliste, on conçoit des prompts et des contextes tres ciblés. Le resultat est souvent plus pertinent pour l'utilisateur final."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Le bon compromis est simple: choisir le plus petit modele capable de repondre au besoin avec un niveau de qualite mesurable. C'est une decision d'ingenierie, pas une course au benchmark."
+          }
+        }
+      ]
+    },
+    "en-us": {
+      "slug": "blog/ai-editorial-small-models-big-outcomes",
+      "seo": {
+        "title": "AI Editorial: Small Models, Big Outcomes - Bezot Corp",
+        "description": "Why smaller models can deliver better product value in real workflows.",
+        "robots": "index, follow",
+        "ogTitle": "AI Editorial: Small Models",
+        "ogDescription": "Less model size, more control, lower operating cost.",
+        "ogImage": "/og/bezot-corp-default.png"
+      },
+      "blocks": [
+        {
+          "type": "hero",
+          "props": {
+            "title": "AI Editorial: Small Models, Big Outcomes",
+            "subtitle": "Useful performance is often a targeting problem."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "In software products, the best AI is not always the largest model. A smaller, well-specialized model can provide more stable responses, lower latency, and sustainable operating costs."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "This approach forces clearer use-case design. Instead of broad prompts against a general model, teams define narrow context and explicit intent. The output is often more relevant to the end user."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "The practical rule is simple: pick the smallest model that reliably meets quality targets. That is an engineering decision, not a benchmark competition."
+          }
+        }
+      ]
+    }
+  }
+}
