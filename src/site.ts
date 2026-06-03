@@ -74,8 +74,10 @@ export function getCanonicalPath(path: string) {
 }
 
 export function findEntryByLocaleAndSlug(locale: Locale, slug = '') {
-  const entry: SiteEntry | undefined = getEntries().find(
-    (item) => item.status === 'published' && item.locales[locale].slug === slug,
+  const normalizedSlug = slug.replace(/^\/+|\/+$/g, '');
+
+  const entry = getEntries().find(
+    (item) => item.status === 'published' && item.locales[locale].slug === normalizedSlug,
   );
 
   if (!entry) {
@@ -85,23 +87,6 @@ export function findEntryByLocaleAndSlug(locale: Locale, slug = '') {
   return {
     entry,
     content: entry.locales[locale],
-  };
-}
-
-export function findPageByLocaleAndSlug(locale: Locale, slug = '') {
-  const normalizedSlug = slug.replace(/^\/+|\/+$/g, '');
-
-  const page = pages.find(
-    (entry) => entry.status === 'published' && entry.locales[locale].slug === normalizedSlug,
-  );
-
-  if (!page) {
-    return null;
-  }
-
-  return {
-    page,
-    content: page.locales[locale],
   };
 }
 
@@ -122,7 +107,7 @@ export function getEntrySeo(entry: SiteEntry, locale: Locale): SeoMetadata {
     alternates,
     ogTitle: content.seo.ogTitle,
     ogDescription: content.seo.ogDescription,
-    ogImage: content.seo.ogImage ?? defaultOgImage,
+    ogImage: content.seo.ogImage || defaultOgImage,
   };
 }
 
@@ -242,12 +227,12 @@ export function getPrerenderRoutes() {
       path: '/',
       seo: getRootSeo(),
     },
-    ...pages
-      .filter((page) => page.status === 'published')
-      .flatMap((page) =>
+    ...getEntries()
+      .filter((entry) => entry.status === 'published')
+      .flatMap((entry) =>
         locales.map((locale) => ({
-          path: getPathForLocaleAndSlug(locale, page.locales[locale].slug),
-          seo: getPageSeo(page, locale),
+          path: getPathForLocaleAndSlug(locale, entry.locales[locale].slug),
+          seo: getEntrySeo(entry, locale),
         })),
       ),
   ];
