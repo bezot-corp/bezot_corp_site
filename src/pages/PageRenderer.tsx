@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { resolveRoute } from '../site';
+import { isPostEntry, resolveRoute } from '../site';
 import { NotFoundPage } from './NotFoundPage';
 import { PageTemplate } from '../templates/PageTemplate';
 
@@ -26,9 +26,25 @@ export function PageRenderer() {
     return <RootLanguagePage />;
   }
 
-  return match.kind === 'page' ? (
-    <PageTemplate page={match.content} seo={match.seo} />
-  ) : (
-    <NotFoundPage locale={match.locale} />
-  );
+  if (match.kind !== 'page') {
+    return <NotFoundPage locale={match.locale} />;
+  }
+
+  const blocks = isPostEntry(match.entry)
+    ? [
+        match.content.blocks[0],
+        {
+          type: 'post_meta',
+          props: {
+            author: match.entry.author,
+            publishedAt: match.entry.publishedAt,
+            updatedAt: match.entry.updatedAt,
+            locale: match.locale,
+          },
+        },
+        ...match.content.blocks.slice(1),
+      ].filter(Boolean)
+    : match.content.blocks;
+
+  return <PageTemplate page={{ ...match.content, blocks }} seo={match.seo} />;
 }

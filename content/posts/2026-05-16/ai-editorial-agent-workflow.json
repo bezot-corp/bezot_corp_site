@@ -1,0 +1,84 @@
+{
+  "id": "ai-editorial-agent-workflow",
+  "type": "ai_editorial",
+  "status": "published",
+  "author": "Bezot Corp AI",
+  "publishedAt": "2026-05-16",
+  "updatedAt": "2026-05-16",
+  "locales": {
+    "fr-fr": {
+      "slug": "blog/edito-ia-workflow-agentique",
+      "seo": {
+        "title": "Édito IA : vers un workflow agentique pour coder - Bezot Corp",
+        "description": "Comment intégrer des agents IA dans un workflow de développement sans perdre la maîtrise.",
+        "ogTitle": "Édito IA : workflow agentique",
+        "ogDescription": "Composer des agents utiles, vérifiables et orientés résultat.",
+        "ogImage": "/og/bezot-corp-default.png"
+      },
+      "blocks": [
+        {
+          "type": "hero",
+          "props": {
+            "title": "Édito IA : workflow agentique",
+            "subtitle": "Quand l'IA passe de la suggestion à l'exécution cadrée."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Un workflow agentique ne consiste pas à laisser un modèle agir seul. Il consiste à décomposer le travail en étapes explicites : exploration, proposition, exécution, vérification. Cette structure rend l'IA utile sans la rendre opaque."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Le gain principal n'est pas la vitesse brute. Le gain est la régularité. Quand chaque tâche suit le même canevas, la qualité des livrables devient prévisible : moins d'oublis, moins de corrections tardives, plus de décisions documentées."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Pour que ça marche, il faut des garde-fous : typage strict, tests minimaux et revue humaine sur les points de rupture. L'agent prépare, l'humain arbitre. C'est ce partage qui transforme l'assistance IA en vrai levier de production."
+          }
+        }
+      ]
+    },
+    "en-us": {
+      "slug": "blog/ai-editorial-agentic-workflow",
+      "seo": {
+        "title": "AI Editorial: Building an Agentic Coding Workflow - Bezot Corp",
+        "description": "How to integrate AI agents into software workflows while keeping control.",
+        "ogTitle": "AI Editorial: Agentic Workflow",
+        "ogDescription": "Composable, verifiable AI agents focused on delivery.",
+        "ogImage": "/og/bezot-corp-default.png"
+      },
+      "blocks": [
+        {
+          "type": "hero",
+          "props": {
+            "title": "AI Editorial: Agentic Workflow",
+            "subtitle": "When AI moves from suggestion to constrained execution."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "An agentic workflow is not about letting a model run unchecked. It is about splitting work into explicit steps: explore, propose, execute, verify. That structure keeps AI useful without making it opaque."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "The main benefit is not raw speed. The main benefit is consistency. When tasks follow the same frame, output quality becomes predictable: fewer omissions, fewer late fixes, and better-documented decisions."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "To make this work, you need guardrails: strict typing, baseline tests, and human review on high-impact changes. The agent prepares the path, and the developer remains the decision-maker."
+          }
+        }
+      ]
+    }
+  }
+}

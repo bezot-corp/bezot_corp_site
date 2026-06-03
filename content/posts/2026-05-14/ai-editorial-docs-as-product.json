@@ -1,0 +1,84 @@
+{
+  "id": "ai-editorial-docs-as-product",
+  "type": "ai_editorial",
+  "status": "archived",
+  "author": "Bezot Corp AI",
+  "publishedAt": "2026-05-14",
+  "updatedAt": "2026-05-17",
+  "locales": {
+    "fr-fr": {
+      "slug": "blog/edito-ia-documentation-produit",
+      "seo": {
+        "title": "Édito IA : traiter la documentation comme un produit - Bezot Corp",
+        "description": "Une documentation vivante améliore autant l'adoption que le code lui-même.",
+        "ogTitle": "Édito IA : documentation produit",
+        "ogDescription": "Passer d'une doc statique à une doc opérationnelle et actionnable.",
+        "ogImage": "/og/bezot-corp-default.png"
+      },
+      "blocks": [
+        {
+          "type": "hero",
+          "props": {
+            "title": "Édito IA : la documentation est un produit",
+            "subtitle": "Si personne ne comprend l'outil, l'outil n'existe pas vraiment."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Les assistants IA changent notre rapport à la documentation. Ils peuvent transformer des notes techniques en guides utiles, mais seulement si la source est claire, structurée et maintenue. Sans cela, l'IA amplifie le bruit autant que le signal."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Traiter la documentation comme un produit, c'est définir des parcours : démarrage rapide, cas d'usage fréquents, résolution d'erreurs et exemples minimaux reproductibles. Chaque section doit répondre à une action concrète du lecteur."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Avec ce cadre, l'IA devient un accélérateur éditorial : génération de brouillons, harmonisation du ton, détection d'incohérences et mise à jour continue. La valeur ne vient pas du volume de texte, mais de la fiabilité des réponses fournies."
+          }
+        }
+      ]
+    },
+    "en-us": {
+      "slug": "blog/ai-editorial-documentation-as-product",
+      "seo": {
+        "title": "AI Editorial: Treat Documentation as a Product - Bezot Corp",
+        "description": "Living documentation improves adoption as much as the code itself.",
+        "ogTitle": "AI Editorial: Documentation as Product",
+        "ogDescription": "Move from static docs to operational, actionable guidance.",
+        "ogImage": "/og/bezot-corp-default.png"
+      },
+      "blocks": [
+        {
+          "type": "hero",
+          "props": {
+            "title": "AI Editorial: Documentation Is a Product",
+            "subtitle": "If no one understands the tool, the tool does not really exist."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "AI assistants change how teams approach documentation. They can turn technical notes into useful guides, but only when source content is clear, structured, and maintained. Otherwise, AI amplifies noise as much as signal."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Treating docs as a product means designing user journeys: quick start, common use cases, error resolution, and minimal reproducible examples. Every section should support a concrete user action."
+          }
+        },
+        {
+          "type": "paragraph",
+          "props": {
+            "text": "Within that framework, AI becomes an editorial accelerator: drafting updates, aligning tone, spotting inconsistencies, and keeping content current. The value comes from answer reliability, not text volume."
+          }
+        }
+      ]
+    }
+  }
+}

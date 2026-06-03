@@ -1,9 +1,17 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import {readJson,collectJsonFiles} from './common.mjs';
+import path from 'node:path';
+import { isJSDocCommentContainingNode } from 'typescript';
 
-const inputPath = 'content/pages.json';
+const pagesInputPath = 'content/pages.json';
+const postsInputDir = 'content/posts';
 const outputPath = 'src/generated/site.ts';
 
-const source = JSON.parse(readFileSync(inputPath, 'utf-8'));
+const source = readJson(pagesInputPath);
+
+const posts = collectJsonFiles(postsInputDir)
+  .map(readJson)
+  .sort((a, b) => String(b.publishedAt ?? '').localeCompare(String(a.publishedAt ?? '')));
 
 mkdirSync('src/generated', { recursive: true });
 
@@ -17,11 +25,15 @@ export const gone = ${JSON.stringify(source.gone ?? [], null, 2)} as const;
 
 export const pages = ${JSON.stringify(source.pages, null, 2)} as const;
 
+export const posts = ${JSON.stringify(posts, null, 2)} as const;
+
 export type GeneratedSite = typeof site;
 export type GeneratedPage = (typeof pages)[number];
+export type GeneratedPost = (typeof posts)[number];
 export type GeneratedLocale = (typeof site.locales)[number];
+export type GeneratedEntry = GeneratedPage | GeneratedPost;
 export type GeneratedBlock =
-  GeneratedPage["locales"][GeneratedLocale]["blocks"][number];
+  GeneratedEntry["locales"][GeneratedLocale]["blocks"][number];
 `;
 
 writeFileSync(outputPath, output);
