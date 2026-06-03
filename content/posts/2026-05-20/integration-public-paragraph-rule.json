@@ -11,7 +11,6 @@
       "seo": {
         "title": "Titre FR - Bezot Corp",
         "description": "Description FR",
-        "robots": "index, follow",
         "ogTitle": "Titre FR",
         "ogDescription": "Description FR",
         "ogImage": "/og/bezot-corp-default.png"
@@ -37,7 +36,6 @@
       "seo": {
         "title": "EN title - Bezot Corp",
         "description": "EN description",
-        "robots": "index, follow",
         "ogTitle": "EN title",
         "ogDescription": "EN description",
         "ogImage": "/og/bezot-corp-default.png"
