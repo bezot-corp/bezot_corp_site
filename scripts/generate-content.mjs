@@ -1,28 +1,11 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import {readJson,collectJsonFiles} from './common.mjs';
 import path from 'node:path';
+import { isJSDocCommentContainingNode } from 'typescript';
 
 const pagesInputPath = 'content/pages.json';
 const postsInputDir = 'content/posts';
 const outputPath = 'src/generated/site.ts';
-
-function readJson(filePath) {
-  return JSON.parse(readFileSync(filePath, 'utf-8'));
-}
-
-function collectJsonFiles(dirPath) {
-  if (!existsSync(dirPath)) return [];
-
-  return readdirSync(dirPath)
-    .flatMap((entry) => {
-      const entryPath = path.join(dirPath, entry);
-      return statSync(entryPath).isDirectory()
-        ? collectJsonFiles(entryPath)
-        : entryPath.endsWith('.json')
-          ? [entryPath]
-          : [];
-    })
-    .sort();
-}
 
 const source = readJson(pagesInputPath);
 

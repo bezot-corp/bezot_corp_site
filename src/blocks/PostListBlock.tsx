@@ -60,8 +60,8 @@ export function PostListBlock({ props }: Props) {
       {visiblePosts.map((post) => {
         const content = post.locales[locale];
         const path = getPathForLocaleAndSlug(locale, content.slug);
-        const title = content.seo.ogTitle ?? content.seo.title;
-        const description = content.seo.description ?? content.seo.ogDescription;
+        const title = content.seo.ogTitle;
+        const description = content.seo.description;
 
         return (
           <article key={post.id}>
