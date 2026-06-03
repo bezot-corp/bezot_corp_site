@@ -1,15 +1,34 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
 
 const pagesInputPath = 'content/pages.json';
-const blogInputPath = 'content/blog.json';
+const postsInputDir = 'content/posts';
 const outputPath = 'src/generated/site.ts';
 
-const pagesSource = JSON.parse(readFileSync(pagesInputPath, 'utf-8'));
-const blogSource = JSON.parse(readFileSync(blogInputPath, 'utf-8'));
-const source = {
-  ...pagesSource,
-  posts: blogSource.posts ?? [],
-};
+function readJson(filePath) {
+  return JSON.parse(readFileSync(filePath, 'utf-8'));
+}
+
+function collectJsonFiles(dirPath) {
+  if (!existsSync(dirPath)) return [];
+
+  return readdirSync(dirPath)
+    .flatMap((entry) => {
+      const entryPath = path.join(dirPath, entry);
+      return statSync(entryPath).isDirectory()
+        ? collectJsonFiles(entryPath)
+        : entryPath.endsWith('.json')
+          ? [entryPath]
+          : [];
+    })
+    .sort();
+}
+
+const source = readJson(pagesInputPath);
+
+const posts = collectJsonFiles(postsInputDir)
+  .map(readJson)
+  .sort((a, b) => String(b.publishedAt ?? '').localeCompare(String(a.publishedAt ?? '')));
 
 mkdirSync('src/generated', { recursive: true });
 
@@ -22,16 +41,16 @@ export const redirects = ${JSON.stringify(source.redirects ?? [], null, 2)} as c
 export const gone = ${JSON.stringify(source.gone ?? [], null, 2)} as const;
 
 export const pages = ${JSON.stringify(source.pages, null, 2)} as const;
-export const posts = ${JSON.stringify(source.posts ?? [], null, 2)} as const;
+
+export const posts = ${JSON.stringify(posts, null, 2)} as const;
 
 export type GeneratedSite = typeof site;
 export type GeneratedPage = (typeof pages)[number];
 export type GeneratedPost = (typeof posts)[number];
 export type GeneratedLocale = (typeof site.locales)[number];
-
+export type GeneratedEntry = GeneratedPage | GeneratedPost;
 export type GeneratedBlock =
-  | GeneratedPage["locales"][GeneratedLocale]["blocks"][number]
-  | GeneratedPost["locales"][GeneratedLocale]["blocks"][number];
+  GeneratedEntry["locales"][GeneratedLocale]["blocks"][number];
 `;
 
 writeFileSync(outputPath, output);
