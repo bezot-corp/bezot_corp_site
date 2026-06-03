@@ -11,10 +11,9 @@
       "seo": {
         "title": "Édito IA : pourquoi l’IA locale compte - Bezot Corp",
         "description": "Un édito IA supervisé sur l’intérêt de l’IA locale pour les outils développeur.",
-        "robots": "index, follow",
         "ogTitle": "Édito IA : pourquoi l’IA locale compte",
         "ogDescription": "Un texte généré par IA, relu et publié par Bezot Corp.",
-        "ogImage": ""
+        "ogImage": "/og/bezot-corp-default.png"
       },
       "blocks": [
         {
@@ -45,13 +44,13 @@
         {
           "type": "paragraph",
           "props": {
-            "text": "Le troisième avantage est la résilience. En cas de latence réseau, de quota externe ou de changement d’API, l’outillage continue d’aider. Cette robustesse est essentielle pour des usages quotidiens: refactorings, revues ciblées, documentation vivante et génération de structures répétitives."
+            "text": "Le troisième avantage est la résilience. En cas de latence réseau, de quota externe ou de changement d’API, l’outillage continue d’aider. Cette robustesse est essentielle pour des usages quotidiens : refactorings, revues ciblées, documentation vivante et génération de structures répétitives."
           }
         },
         {
           "type": "paragraph",
           "props": {
-            "text": "L’IA locale ne remplace pas le jugement d’un développeur, elle l’augmente. Chez Bezot Corp, notre ligne est simple: garder l’humain décisionnaire, rendre l’automatisation explicable, et privilégier des assistants utiles avant d’être impressionnants."
+            "text": "L’IA locale ne remplace pas le jugement d’un développeur, elle l’augmente. Chez Bezot Corp, notre ligne est simple : garder l’humain décisionnaire, rendre l’automatisation explicable, et privilégier des assistants utiles avant d’être impressionnants."
           }
         }
       ]
@@ -61,7 +60,6 @@
       "seo": {
         "title": "AI Editorial: Why Local AI Matters - Bezot Corp",
         "description": "A supervised AI editorial about local AI for developer tooling.",
-        "robots": "index, follow",
         "ogTitle": "AI Editorial: Why Local AI Matters",
         "ogDescription": "An AI-generated text reviewed and published by Bezot Corp.",
         "ogImage": "/og/bezot-corp-default.png"

@@ -10,8 +10,7 @@
       "slug": "blog/edito-ia-workflow-agentique",
       "seo": {
         "title": "Édito IA : vers un workflow agentique pour coder - Bezot Corp",
-        "description": "Comment intégrer des agents IA dans un workflow de dev sans perdre la maîtrise.",
-        "robots": "index, follow",
+        "description": "Comment intégrer des agents IA dans un workflow de développement sans perdre la maîtrise.",
         "ogTitle": "Édito IA : workflow agentique",
         "ogDescription": "Composer des agents utiles, vérifiables et orientés résultat.",
         "ogImage": "/og/bezot-corp-default.png"
@@ -27,19 +26,19 @@
         {
           "type": "paragraph",
           "props": {
-            "text": "Un workflow agentique ne consiste pas a laisser un modele agir seul. Il consiste a decomposer le travail en etapes explicites: exploration, proposition, execution, verification. Cette structure rend l'IA utile sans la rendre opaque."
+            "text": "Un workflow agentique ne consiste pas à laisser un modèle agir seul. Il consiste à décomposer le travail en étapes explicites : exploration, proposition, exécution, vérification. Cette structure rend l'IA utile sans la rendre opaque."
           }
         },
         {
           "type": "paragraph",
           "props": {
-            "text": "Le gain principal n'est pas la vitesse brute. Le gain est la regularite. Quand chaque tache suit le meme canevas, la qualite des livrables devient previsible: moins d'oublis, moins de corrections tardives, plus de decisions documentees."
+            "text": "Le gain principal n'est pas la vitesse brute. Le gain est la régularité. Quand chaque tâche suit le même canevas, la qualité des livrables devient prévisible : moins d'oublis, moins de corrections tardives, plus de décisions documentées."
           }
         },
         {
           "type": "paragraph",
           "props": {
-            "text": "Pour que ca marche, il faut des garde-fous: typage strict, tests minimaux, et revue humaine sur les points de rupture. L'agent prepare, l'humain arbitre. C'est ce partage qui transforme l'assistance IA en vrai levier de production."
+            "text": "Pour que ça marche, il faut des garde-fous : typage strict, tests minimaux et revue humaine sur les points de rupture. L'agent prépare, l'humain arbitre. C'est ce partage qui transforme l'assistance IA en vrai levier de production."
           }
         }
       ]
@@ -49,7 +48,6 @@
       "seo": {
         "title": "AI Editorial: Building an Agentic Coding Workflow - Bezot Corp",
         "description": "How to integrate AI agents into software workflows while keeping control.",
-        "robots": "index, follow",
         "ogTitle": "AI Editorial: Agentic Workflow",
         "ogDescription": "Composable, verifiable AI agents focused on delivery.",
         "ogImage": "/og/bezot-corp-default.png"
