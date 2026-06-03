@@ -7,9 +7,15 @@ const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
 const serverEntryPath = path.join(distDir, 'server', 'entry-server.js');
 const templatePath = path.join(distDir, 'index.html');
-const contentPath = path.join(rootDir, 'content', 'pages.json');
+const pagesContentPath = path.join(rootDir, 'content', 'pages.json');
+const blogContentPath = path.join(rootDir, 'content', 'blog.json');
 
-const source = JSON.parse(readFileSync(contentPath, 'utf-8'));
+const pagesSource = JSON.parse(readFileSync(pagesContentPath, 'utf-8'));
+const blogSource = JSON.parse(readFileSync(blogContentPath, 'utf-8'));
+const source = {
+  ...pagesSource,
+  posts: blogSource.posts ?? [],
+};
 const template = readFileSync(templatePath, 'utf-8');
 
 const serverEntry = await import(pathToFileURL(serverEntryPath).href);
@@ -113,13 +119,15 @@ function writeRoute(routePath, html) {
 }
 
 function findUpdatedAt(routePath) {
-  for (const page of source.pages) {
+  const entries = [...(source.pages ?? []), ...(source.posts ?? [])];
+
+  for (const entry of entries) {
     for (const locale of source.site.locales) {
-      const content = page.locales[locale];
+      const content = entry.locales[locale];
       const pagePath = content.slug ? `/${locale}/${content.slug}` : `/${locale}`;
 
       if (normalizePath(pagePath) === normalizePath(routePath)) {
-        return page.updatedAt;
+        return entry.updatedAt;
       }
     }
   }

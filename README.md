@@ -37,6 +37,7 @@ The build generates:
 The source content lives in:
 
     content/pages.json
+    content/blog.json
 
 The generated TypeScript content lives in:
 
